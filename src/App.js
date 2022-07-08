@@ -6,10 +6,22 @@ function App() {
 
   const [city, setCity] = useState("");
   const [workableObject, setWorkableObject] = useState([]);
+  const [ lat, setLat] = useState("");
+  const [lon, setLon] = useState("");
   const handleCitySearch = (e) => {
     e.preventDefault(); 
      setCity(e.target[0].value);
   };
+
+useEffect(() => {
+  const script = document.createElement('script');
+  script.src = "https://ticketmaster-api-staging.github.io/products-and-docs/widgets/event-discovery/1.0.0/lib/main-widget.js";
+  script.async = true;
+  document.body.appendChild(script);
+  return () => {
+    document.body.removeChild(script);
+  }
+}, []);
   
  useEffect(() => {
   // get the latitude and longitute of the city user types in
@@ -33,6 +45,8 @@ function App() {
     const cityCoordinates = (result) => {
       let latitude = result.lat
       let longitude = result.lon
+      setLat(latitude);
+      setLon(longitude);
       console.log("lat and lon:", latitude, longitude)
       weatherAppInfo(latitude, longitude)
     };
@@ -49,13 +63,10 @@ function App() {
     }
     axios(callWeatherApp)
         .then((response) => {
-          const results = response.data;
-          let weatherObject;
-          const { weather, main } = weatherObject;
-          console.log(weatherObject)
-          // const feelsLike = results.feels_like - 273.15;
-          // const temp = results.temp - 273.15;
-          // console.log("feelsLike:", feelsLike, "temp:", temp)
+          const results = response.data.main;
+          const feelsLike = results.feels_like - 273.15;
+          const temp = results.temp - 273.15;
+          console.log("feelsLike:", feelsLike, "temp:", temp)
         })
         .catch((error) => {
           console.log(error);
@@ -98,7 +109,6 @@ function App() {
         console.log(error);
       });
 },[city]);
- 
 
   return (
     <div className="App">
@@ -112,6 +122,7 @@ function App() {
         />
         <button>Search</button>
       </form>
+    <div w-type="event-discovery" w-tmapikey="oxnLOLQ2Ha99JTQNBdGEfxCZqX8NTP8l" w-googleapikey="YOUR_GOOGLE_API_KEY" w-keyword="" w-theme="simple" w-colorscheme="light" w-width="350" w-height="600" w-size="5" w-border="0" w-borderradius="4" w-radius="25" w-period="week" w-layout="vertical" w-attractionid="" w-promoterid="" w-venueid="" w-affiliateid="" w-segmentid="" w-proportion="custom" w-titlelink="off" w-sorting="dateAscending" w-id="id_6lh3fi" w-source="" w-branding="Ticketmaster" w-latlong={`${lat},${lon}`}></div>
     </div>
   );
 }
