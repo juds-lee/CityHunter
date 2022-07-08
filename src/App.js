@@ -4,11 +4,22 @@ import { useState, useEffect } from 'react';
 import Search from './Components/Search';
 
 function App() {
-  const [city, setCity] = useState("");
+  const [city, setCity] = useState("");  
+  const [lat, setLat] = useState("");
+  const [lon, setLon] = useState("");
   const handleCitySearch = (e) => {
     e.preventDefault(); 
      setCity(e.target[0].value);
   };
+  useEffect(() => {
+  const script = document.createElement('script');
+  script.src = "https://ticketmaster-api-staging.github.io/products-and-docs/widgets/event-discovery/1.0.0/lib/main-widget.js";
+  script.async = true;
+  document.body.appendChild(script);
+  return () => {
+    document.body.removeChild(script);
+  }
+}, []);
 
   return (
     <div className="App">
@@ -47,10 +58,15 @@ function App() {
     w-id="id_3g61ns" 
     w-source="" 
     w-branding="Ticketmaster" 
-    w-latlong="34.0390107,-118.2672801" 
+    w-latlong={`${lat},${lon}`}
     w-enableinfinityscroll="true">
   </div>
-  <Search city={city}/>
+  <Search 
+    city={city} 
+    setLat={setLat} 
+    setLon={setLon}
+    lat={lat}
+    lon={lon}/>
 </div>
 );
 }
