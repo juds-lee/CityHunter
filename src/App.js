@@ -1,28 +1,79 @@
 import './App.css';
 import axios from 'axios';
 import { useState, useEffect } from 'react';
-import Search from './Components/Search';
+import Newscatcher from './Components/Newscatcher';
+import Ticketmaster from './Components/Ticketmaster';
 
 function App() {
   const [city, setCity] = useState("");  
   const [lat, setLat] = useState("");
   const [lon, setLon] = useState("");
+  const [ degrees, setDegrees] = useState("");
+  const [feelsLike, setFeelsLike] = useState("");
   const handleCitySearch = (e) => {
     e.preventDefault(); 
      setCity(e.target[0].value);
   };
+
   useEffect(() => {
-  const script = document.createElement('script');
-  script.src = "https://ticketmaster-api-staging.github.io/products-and-docs/widgets/event-discovery/1.0.0/lib/main-widget.js";
-  script.async = true;
-  document.body.appendChild(script);
-  return () => {
-    document.body.removeChild(script);
-  }
-}, []);
+    // get the latitude and longitute of the city user types in
+    const cityLatLon = {
+      method: "get",
+      url: `https://api.openweathermap.org/geo/1.0/direct`,
+      params: {
+        appid: "3d91ba5b3c11d13158a2726aab902a0b",
+        q: city,
+      },
+    };
+   axios(cityLatLon)
+      .then((response) => {
+        const results = response.data[0];
+        cityCoordinates(results)
+      })
+      .catch(function (error) {
+        console.log(error);
+      });
+
+    const cityCoordinates = (result) => {
+      let lat = result.lat
+      let lon = result.lon
+      setLat(lat);
+      setLon(lon);
+      console.log("lat and lon:", lat, lon)
+      weatherAppInfo(lat, lon)
+    };
+  //get the weather info with the given lat and lon
+   const weatherAppInfo = (latitude, longitude) => {
+    const callWeatherApp = {
+      method: "get",
+        url: "https://api.openweathermap.org/data/2.5/weather",
+          params: {
+            appid: "3d91ba5b3c11d13158a2726aab902a0b",
+            lat: latitude,
+            lon: longitude
+        }
+    }
+    axios(callWeatherApp)
+        .then((response) => {
+          const results = response.data.main;
+          const feelsLike = results.feels_like - 273.15;
+          const feelsLikeRound = Math.round(feelsLike);
+          setFeelsLike(feelsLikeRound);
+          const temp = results.temp - 273.15;
+          const tempRound = Math.round(temp);
+          setDegrees(tempRound);
+          console.log("feelsLike:", feelsLike, "temp:", temp)
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+      }
+  }, [city]);
 
   return (
     <div className="App">
+     <h1>City Hunter</h1>
+     <h2>Travelling to a new city? Let me help</h2>
      <form className="enterCity" onSubmit={handleCitySearch}>
         <label htmlFor='query'></label>
         <input
@@ -33,40 +84,24 @@ function App() {
         />
         <button>Search</button>
       </form>
-  <div 
-    w-type="event-discovery" 
-    w-tmapikey="oxnLOLQ2Ha99JTQNBdGEfxCZqX8NTP8l" 
-    w-googleapikey="YOUR_GOOGLE_API_KEY" 
-    w-keyword="" 
-    w-theme="simple" 
-    w-colorscheme="light" 
-    w-width="300" 
-    w-height="600" 
-    w-size="10" w-border="0" 
-    w-borderradius="4" 
-    w-radius="25" 
-    w-period="week" 
-    w-layout="vertical" 
-    w-attractionid="" 
-    w-promoterid="" 
-    w-venueid="" 
-    w-affiliateid="" 
-    w-segmentid="" 
-    w-proportion="xxl" 
-    w-titlelink="off" 
-    w-sorting="groupByName" 
-    w-id="id_3g61ns" 
-    w-source="" 
-    w-branding="Ticketmaster" 
-    w-latlong={`${lat},${lon}`}
-    w-enableinfinityscroll="true">
+  <Ticketmaster 
+    lat={lat}
+    lon={lon}
+  />
+  <div className='weatherNetwork'>
+    <h3>{`Weather Forecast in ${city}`}</h3>
+    <h4>{`Temperature: ${degrees}°C`}</h4>
+    <h4>{`Feels Like: ${feelsLike}°C`}</h4>
   </div>
-  <Search 
+  <Newscatcher 
     city={city} 
     setLat={setLat} 
     setLon={setLon}
     lat={lat}
-    lon={lon}/>
+    lon={lon}
+  />
+
+
 </div>
 );
 }
