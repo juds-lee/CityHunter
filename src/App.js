@@ -8,6 +8,8 @@ function App() {
   const [city, setCity] = useState("");  
   const [lat, setLat] = useState("");
   const [lon, setLon] = useState("");
+  const [ degrees, setDegrees] = useState("");
+  const [feelsLike, setFeelsLike] = useState("");
   const handleCitySearch = (e) => {
     e.preventDefault(); 
      setCity(e.target[0].value);
@@ -55,7 +57,11 @@ function App() {
         .then((response) => {
           const results = response.data.main;
           const feelsLike = results.feels_like - 273.15;
+          const feelsLikeRound = Math.round(feelsLike);
+          setFeelsLike(feelsLikeRound);
           const temp = results.temp - 273.15;
+          const tempRound = Math.round(temp);
+          setDegrees(tempRound);
           console.log("feelsLike:", feelsLike, "temp:", temp)
         })
         .catch((error) => {
@@ -82,7 +88,11 @@ function App() {
     lat={lat}
     lon={lon}
   />
- 
+  <div className='weatherNetwork'>
+    <h3>{`Weather Forecast in ${city}`}</h3>
+    <h4>{`Temperature: ${degrees}°C`}</h4>
+    <h4>{`Feels Like: ${feelsLike}°C`}</h4>
+  </div>
   <Newscatcher 
     city={city} 
     setLat={setLat} 
