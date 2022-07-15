@@ -3,9 +3,10 @@ import axios from 'axios';
 import { useState, useEffect } from 'react';
 import Newscatcher from './Components/Newscatcher';
 import Ticketmaster from './Components/Ticketmaster';
+import WeatherDisplay from './Components/WeatherDisplay';
 
 function App() {
-  const [city, setCity] = useState("");  
+  const [city, setCity] = useState(""); 
   const [lat, setLat] = useState("");
   const [lon, setLon] = useState("");
   const [ degrees, setDegrees] = useState("");
@@ -69,7 +70,7 @@ function App() {
         });
       }
   }, [city]);
-
+  
   return (
     <div className="App">
      <h1>City Hunter</h1>
@@ -88,11 +89,12 @@ function App() {
     lat={lat}
     lon={lon}
   />
-  <div className='weatherNetwork'>
-    <h3>{`Weather Forecast in ${city}`}</h3>
-    <h4>{`Temperature: ${degrees}°C`}</h4>
-    <h4>{`Feels Like: ${feelsLike}°C`}</h4>
-  </div>
+  <WeatherDisplay
+   city={city}
+   degrees={degrees}
+   feelsLike={feelsLike}
+   />
+
   <Newscatcher 
     city={city} 
     setLat={setLat} 

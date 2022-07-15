@@ -73,6 +73,7 @@ return (
 <div>
   <div w-type="event-discovery" w-tmapikey="oxnLOLQ2Ha99JTQNBdGEfxCZqX8NTP8l" w-googleapikey="YOUR_GOOGLE_API_KEY" w-keyword="" w-theme="simple" w-colorscheme="light" w-width="350" w-height="600" w-size="10" w-border="0" w-borderradius="4" w-radius="25" w-period="week" w-layout="vertical" w-attractionid="" w-promoterid="" w-venueid="" w-affiliateid="" w-segmentid="" w-proportion="custom" w-titlelink="off" w-sorting="groupByName" w-id="id_wrzmw" w-source="" w-branding="Ticketmaster" w-latlong="34.0390107,-118.2672801"></div>
 </div>
+
 )
 }
 

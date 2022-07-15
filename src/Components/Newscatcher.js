@@ -23,6 +23,12 @@ const Newscatcher = ({city}) => {
         console.log(error);
       });
 },[city]);
+
+return (
+  <div className="newsContainer">
+    <h3>News</h3>
+  </div>
+)
 }
 
 export default Newscatcher;
