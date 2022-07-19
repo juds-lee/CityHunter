@@ -3,8 +3,6 @@ import { useState, useEffect } from 'react';
 import axios from 'axios';
 
 const WeatherDisplay = ({city, feelsLike, degrees } ) => {  
-  const [torontoLat, setTorontoLat] = useState("");
-  const [torontoLon, setTorontoLon] = useState("");
   const [torontoDegrees, setTorontoDegrees] = useState("");
   const [torontoFeelsLike, setTorontoFeelsLike] = useState("");
 

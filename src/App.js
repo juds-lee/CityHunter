@@ -69,12 +69,31 @@ function App() {
           console.log(error);
         });
       }
+    const ticketMasterSearch = {
+      method: "get",
+      url: "https://app.ticketmaster.com/discovery/v2/events.json?",
+        params: {
+          apikey: "oxnLOLQ2Ha99JTQNBdGEfxCZqX8NTP8l",
+          city: city,
+          size: "20",
+          sort: "date,asc"
+        }
+    }
+    axios(ticketMasterSearch)
+      .then((response) => {
+         const results = response.data._embedded.events
+         console.log(response)
+         console.log(results)
+      })
+      .catch(function (error) {
+        console.log(error);
+      });
   }, [city]);
   
   return (
     <div className="App">
      <h1>City Hunter</h1>
-     <h2>Travelling to a new city? Let me help</h2>
+     <h2>Travelling to a new city?</h2>
      <form className="enterCity" onSubmit={handleCitySearch}>
         <label htmlFor='query'></label>
         <input
